@@ -3,3 +3,4 @@ pygeodesy
 pyyaml
 requests
 json
+paho-mqtt

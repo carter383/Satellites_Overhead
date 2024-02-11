@@ -12,5 +12,10 @@ Discord: {
   Enable: True,
   Hook: ''
 }
-
+MQTT: {
+  Enable: False,
+  Host: '',
+  Port: '',
+  Topic: ''
+}
 

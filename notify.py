@@ -5,6 +5,7 @@ import os
 import yaml
 import requests
 import json
+import paho.mqtt.client as mqtt
 class Sats_Overhead:
     def __init__(self):
         self.read_config()
@@ -21,9 +22,12 @@ class Sats_Overhead:
         self.Base_Lat = config['Lat']
         self.Base_Long = config['Lon']
         if config['Discord']['Enable']:
-
             self.Discord_hook = config['Discord']['Hook']
-
+        if config['MQTT']['Enable']:
+            self.MQTT = True
+            self.MQTTPort = config['MQTT']['Port']
+            self.MQTTHost = config['MQTT']['Host']
+            self.MQTTTopic = config['MQTT']['Topic']
 
     def file_download(self):
         if self.username == "" or self.password == "":
@@ -84,6 +88,18 @@ class Sats_Overhead:
         }
         result = requests.post(self.Discord_hook, json=data)
 
+    def MQTTMSG(self):
+        if len(self.Overhead)!= 0:
+            client = mqtt.Client()
+            client.connect(self.MQTTHost, port=self.MQTTPort)
+            client.publish(self.MQTTTopic, str(True))
+            client.disconnect()
+        else:
+            client = mqtt.Client()
+            client.connect(self.MQTTHost, port=self.MQTTPort)
+            client.publish(self.MQTTTopic, str(False))
+            client.disconnect()
+
     def Check_overhead(self):
         self.Overhead = []
         while True:
@@ -108,7 +124,8 @@ class Sats_Overhead:
                     print(f"{sat[0]}, is overhead")
                 elif sat[0] in self.Overhead:
                     self.Overhead.remove(sat[0])
-
+        if self.MQTT:
+            self.MQTTMSG()
 
 if __name__ == "__main__":
     Sats_Over = Sats_Overhead()
