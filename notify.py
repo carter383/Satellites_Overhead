@@ -10,6 +10,7 @@ class Sats_Overhead:
     def __init__(self):
         self.read_config()
         self.readfile()
+        self.Sats_Current = {}
 
     def read_config(self):
         filename = 'config.yaml'
@@ -116,6 +117,7 @@ class Sats_Overhead:
                     within_distance = self.is_within_distance(Lat, Lon)
                 except:
                     continue
+                self.Sats_Current[sat[0]] = [Lat,Lon]
                 if within_distance:
                     if sat[0] in self.Overhead:
                         continue
