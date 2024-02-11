@@ -33,7 +33,7 @@ class Sats_Overhead:
         os.system("curl --cookie cookies.txt --limit-rate 100K https://www.space-track.org/basicspacedata/query/class/gp/EPOCH/%3E%5Cnow%2D30/orderby/NORAD%5FCAT%5FID%2CEPOCH/format/3le > Sats_TLE.3le")
         print("Downloaded Files")
 
-    def haversine(lat1, lon1, lat2, lon2):
+    def haversine(self, lat1, lon1, lat2, lon2):
         lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
         dlat = lat2 - lat1 
         dlon = lon2 - lon1 
@@ -56,6 +56,7 @@ class Sats_Overhead:
                 print('Invalid TLE file Check Credentials for https://www.space-track.org')
                 os.system('rm Sats_TLE.3le')
                 exit()
+        with open(file_path, 'r') as file:               
             while True:
                 lines = [file.readline().strip() for _ in range(3)]
                 if not any(lines):
@@ -78,22 +79,28 @@ class Sats_Overhead:
 
 
     def Check_overhead(self):
+        self.Overhead = []
         while True:
             for sat in self.Sats:
                 try:    
                     tle_rec = ephem.readtle(sat[0], sat[1], sat[2]);
                     tle_rec.compute()
-                    Lat, Lon, Height = self.geodetic_to_geocentric(self.Ellipsiod, tle_rec.sublong, tle_rec.sublat, tle_rec.elevation)
+                    Lat, Lon, Height = self.geodetic_to_geocentric( tle_rec.sublong, tle_rec.sublat, tle_rec.elevation)
                 except RuntimeError :
                     self.Sats.remove(sat)
                     print(f"Cannot Calculate Sat {sat[0]}")
                     continue
                 try:
-                    within_one_mile = self.is_within_distance(Lat, Lon)
+                    within_distance = self.is_within_distance(Lat, Lon)
                 except:
                     continue
-                if within_one_mile:
+                if within_distance:
+                    if sat[0] in self.Overhead:
+                        continue
+                    self.Overhead.append(sat[0])
                     print(f"{sat[0]}, is overhead")
+                elif sat[0] in self.Overhead:
+                    self.Overhead.remove(sat[0])
 
 
 if __name__ == "__main__":
