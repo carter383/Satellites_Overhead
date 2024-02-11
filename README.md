@@ -17,8 +17,6 @@ Features
 Upcoming Features
 -----------------
 
--   Extended Notification Channels: Plans to support email, SMS, and push notifications.
--   Improved Tracking Accuracy: Implement more precise algorithms for satellite tracking.
 -   User Interface: Develop a user-friendly interface for easier management of settings and viewing of overhead satellites.
 -   Community Features: Share sightings and track satellites of interest as a community.
 
