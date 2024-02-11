@@ -3,7 +3,8 @@ from math import cos, radians, sin, sqrt
 import math
 import os
 import yaml
-
+import requests
+import json
 class Sats_Overhead:
     def __init__(self):
         self.read_config()
@@ -19,6 +20,10 @@ class Sats_Overhead:
         self.Ellipsiod = config['Ellipsiod']
         self.Base_Lat = config['Lat']
         self.Base_Long = config['Lon']
+        if config['Discord']['Enable']:
+
+            self.Discord_hook = config['Discord']['Hook']
+
 
     def file_download(self):
         if self.username == "" or self.password == "":
@@ -73,7 +78,11 @@ class Sats_Overhead:
         y = r * sin(λ)
         z = (n * (1 - e2) + height) * sin_φ
         return x, y, z
-
+    def push_to_Discord(self, message):
+        data = {
+            "content": f"{message}: is currently Overhead",
+        }
+        result = requests.post(self.Discord_hook, json=data)
 
     def Check_overhead(self):
         self.Overhead = []
@@ -95,6 +104,7 @@ class Sats_Overhead:
                     if sat[0] in self.Overhead:
                         continue
                     self.Overhead.append(sat[0])
+                    self.push_to_Discord(sat[0])
                     print(f"{sat[0]}, is overhead")
                 elif sat[0] in self.Overhead:
                     self.Overhead.remove(sat[0])

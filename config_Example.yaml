@@ -8,4 +8,9 @@ Credentials: {
   Username: "",
   Password: ""
 }
+Discord: {
+  Enable: True,
+  Hook: ''
+}
+
 
