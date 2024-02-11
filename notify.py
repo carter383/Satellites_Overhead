@@ -29,7 +29,8 @@ class Sats_Overhead:
             self.MQTTPort = config['MQTT']['Port']
             self.MQTTHost = config['MQTT']['Host']
             self.MQTTTopic = config['MQTT']['Topic']
-
+        else:
+            self.MQTT = False
     def file_download(self):
         if self.username == "" or self.password == "":
             print('No Username Or Password found in the config for https://www.space-track.org')
@@ -117,7 +118,7 @@ class Sats_Overhead:
                     within_distance = self.is_within_distance(Lat, Lon)
                 except:
                     continue
-                self.Sats_Current[sat[0]] = [Lat,Lon]
+                self.Sats_Current[sat[0]] = {'Lat': Lat,'Lon': Lon, 'Height': Height}
                 if within_distance:
                     if sat[0] in self.Overhead:
                         continue
@@ -126,8 +127,8 @@ class Sats_Overhead:
                     print(f"{sat[0]}, is overhead")
                 elif sat[0] in self.Overhead:
                     self.Overhead.remove(sat[0])
-        if self.MQTT:
-            self.MQTTMSG()
+            if self.MQTT:
+                self.MQTTMSG()
 
 if __name__ == "__main__":
     Sats_Over = Sats_Overhead()
