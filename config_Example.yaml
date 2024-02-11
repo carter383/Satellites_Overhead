@@ -1,0 +1,11 @@
+Lat: 0
+Lon: 0
+Ellipsiod:
+  - 6378137 
+  - 298.25722356
+Within_Miles: 3
+Credentials: {
+  Username: "",
+  Password: ""
+}
+
