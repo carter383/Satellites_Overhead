@@ -1,10 +1,7 @@
 import ephem
-import datetime
-import pygeodesy
 from math import cos, radians, sin, sqrt
 import math
 import os
-import subprocess
 import yaml
 
 class Sats_Overhead:
